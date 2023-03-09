@@ -151,18 +151,6 @@ const createUser = async (
             const hashedPassword = await bcrypt.hash(password, 10)
             const confirmAccountToken = loginTokenHelper()
 
-            const newWallet = await Wallets.create({
-                walletId: idGeneratorHelper('wlt'),
-                withdrawalsId: [],
-                depositId: [],
-                currentBalance: 0,
-            })
-            if (!newWallet) {
-                throw new Error('Wallet creation failed')
-            }
-            console.log('createWallet: wallet created', {
-                newWalletInformation: newWallet,
-            })
             const newUser = await Users.create({
                 createdAt: new Date(),
                 profile: name,
@@ -179,9 +167,129 @@ const createUser = async (
                 active: true,
                 acceptedAllPolicies,
                 accountSetupProgress: 'verify-account',
-                walletId: newWallet.walletId,
+                type: 'PATIENT',
                 referralCode:
                     'make a helper that generates referral code, make referralCode unique on schema',
+            })
+            console.log('createUser: user created', {
+                newUserInformation: newUser,
+            })
+            // if (newUser) {
+            //     //we dont wait for send email
+            //     sendEmail(
+            //         process.env.MEDSURF_EMAIL || 'admin@medsurf.co',
+            //         newUser?.email?.address,
+            //         'Confirm your account',
+            //         'Please verify your account to continue using MedSurf platform. Thank you!',
+            //         `<br><br><h2>Hello ${newUser?.profile?.fullName}, Welcome to MedSurf. Please verify your account now 🚀</h2><br><br><h1>${confirmAccountToken} (code)</h1>`
+            //     )
+            //     return {
+            //         token: jwtAccessSign(
+            //             newUser?._id,
+            //             newUser?.email?.address,
+            //             newUser?.profile?.username
+            //         ),
+            //     }
+            // } else {
+            //     throw new Error('Internal server error unable to register')
+            // }
+        } else {
+            throw new Error('User already exists')
+        }
+    } catch (error) {
+        console.error('createUser: exception occurred', {
+            errorMessage: error?.message,
+            details: { error },
+        })
+        throw new GraphQLError(`See Errors: ${error?.message}`, {
+            extensions: {
+                code: error?.extensions?.code || 'MEDSURFAPI_MUTATION_ERROR',
+            },
+            originalError: error,
+        })
+    }
+}
+
+const createDoctorAccount = async (
+    parent,
+    {
+        registerInputUser: {
+            name,
+            email,
+            password,
+            confirmPassword,
+            acceptedAllPolicies,
+        },
+    },
+    { token }
+) => {
+    try {
+        console.log(
+            'createUser: started',
+            {
+                name,
+                email,
+                password,
+                confirmPassword,
+                acceptedAllPolicies,
+            },
+            { token }
+        )
+
+        //check whether admin is creating the account, see what decoded token looks like and add check if it is admin
+        const auth = checkAuth(token)
+        if (!auth) {
+            throw new GraphQLError(
+                'You are not authorized to perform this action.',
+                {
+                    extensions: {
+                        code: 'FORBIDDEN',
+                    },
+                }
+            )
+        }
+
+        const user = await Users.findOne({ 'email.address': email })
+        if (user === null) {
+            let errs = []
+
+            if (!name) {
+                errs.push('Valid Name is required')
+            }
+
+            if (validateEmail(email) === false) {
+                errs.push('Valid Email is required')
+            }
+
+            if (password !== confirmPassword) {
+                errs.push('Password do not match')
+            }
+
+            if (errs?.length) {
+                console.log(errs)
+                throw new Error(errs)
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10)
+            const confirmAccountToken = loginTokenHelper()
+
+            const newUser = await Users.create({
+                createdAt: new Date(),
+                profile: name,
+                email: {
+                    address: email,
+                    verificationEmailSent: true,
+                    verified: false,
+                    verificationCode: confirmAccountToken,
+                },
+                authServices: {
+                    password: hashedPassword,
+                    isGoogleSignIn: false,
+                },
+                active: true,
+                acceptedAllPolicies,
+                accountSetupProgress: 'verified',
+                type: 'DOCTOR',
             })
             console.log('createUser: user created', {
                 newUserInformation: newUser,
@@ -432,8 +540,8 @@ const changePasswordSecurely = async (
         const code = randomStringGenerator()
         const user = await Users.findOne({
             'email.verificationCode': secureCode,
-            'email.verified': true,
-            'email.verificationEmailSent': true,
+            //'email.verified': true,
+            //'email.verificationEmailSent': true,
         }).exec()
         if (user) {
             console.log('changePasswordSecurely: changing password', {})
@@ -575,15 +683,12 @@ const updateUserProfileInformation = async (
     }
 }
 
-
-
 export {
     loginWithPassword, // passed
     createUser, // passed
     //resendVerification, // passed
-   // verifyAccount, // passed
+    // verifyAccount, // passed
     //emailAddressLookUp, // passed
     changePasswordSecurely, //passed
     updateUserProfileInformation,
-  
 }
