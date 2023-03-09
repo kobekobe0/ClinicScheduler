@@ -61,6 +61,7 @@ const createAppointment = async (
             doctorId: doctorId,
             patientId: patientId,
             isComplete: false,
+            isCancelled: false,
         })
         if (!appointment) {
             const newAppointment = await Appointments.create({
@@ -176,12 +177,6 @@ const updateAppointMent = async (
                 },
             })
         }
-
-        return {
-            success: true,
-            message: 'successfully updated the appointment',
-        }
-
         //TODO
         //Send notification to patient and doctors about the changes
     } catch (error) {
@@ -198,4 +193,63 @@ const updateAppointMent = async (
     }
 }
 
-export { createAppointment, updateAppointMent }
+const cancelAppointment = async (parent, { appointmentId }, token) => {
+    try {
+        console.log('cancelAppointment: started', {
+            appointmentId,
+        })
+
+        const auth = checkAuth(token)
+        if (!auth) {
+            throw new GraphQLError(
+                'You are not authorized to perform this action.',
+                {
+                    extensions: {
+                        code: 'FORBIDDEN',
+                    },
+                }
+            )
+        }
+
+        const appointment = await Appointments.findOne(appointmentId)
+        if (!appointment) {
+            throw new GraphQLError('Cannot find the appointment', {
+                extensions: {
+                    code: 'INVALID ID',
+                },
+            })
+        }
+
+        if (appointment.doctorId != auth.userId) {
+            throw new GraphQLError(
+                'You are not authorized to perform this task',
+                {
+                    extensions: {
+                        code: 'FORBIDDEN',
+                    },
+                }
+            )
+        }
+
+        const canceledAppointment = await Appointments.findByIdAndUpdate(
+            appointmentId,
+            {
+                updatedAt: Date.now(),
+                isCancelled: true,
+            }
+        )
+    } catch (error) {
+        console.error('cancelAppointment: exception occurred', {
+            errorMessage: error?.message,
+            details: { error },
+        })
+        throw new GraphQLError(`See Errors: ${error?.message}`, {
+            extensions: {
+                code: error?.extensions?.code || 'SCHEDULER_MUTATION_ERROR',
+            },
+            originalError: error,
+        })
+    }
+}
+
+export { createAppointment, updateAppointMent, cancelAppointment }
