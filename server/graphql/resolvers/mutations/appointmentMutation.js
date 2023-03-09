@@ -138,67 +138,43 @@ const updateAppointMent = async (
             })
         }
 
-        const doctor = await Users.findOne({ _id: doctorId })
-        if (!doctor) {
-            throw new GraphQLError('Cannot find the doctor', {
-                extensions: {
-                    code: 'INVALID DOCTOR',
-                },
-            })
-        }
-
-        const patient = await Users.findOne({ _id: patientId })
-        if (!patient) {
-            throw new GraphQLError('Cannot find the patient', {
-                extensions: {
-                    code: 'INVALID PATIENT',
-                },
-            })
-        }
-
-        if (patient?._id != appointment?.patientId) {
-            throw new GraphQLError(
-                'You are not authorized to perform this task',
+        console.log(auth.userId == appointment.patientId)
+        console.log(appointment.patientId)
+        if (auth?.userId == appointment?.doctorId) {
+            const updatedAppointment = await Appointments.findByIdAndUpdate(
+                appointmentId,
                 {
-                    extensions: {
-                        code: 'FORBIDDEN',
+                    updatedAt: Date.now(),
+                    schedule: {
+                        day: day,
+                        time: time,
+                        year: year,
                     },
+                    room: room,
                 }
             )
-        }
-        if (doctor?._id != appointment?.doctorId) {
-            throw new GraphQLError(
-                'You are not authorized to perform this task',
-                {
-                    extensions: {
-                        code: 'FORBIDDEN',
-                    },
-                }
-            )
-        }
 
-        const updatedAppointment = await Appointments.findByIdAndUpdate(
-            appointmentId,
-            {
-                updatedAt: Date.now(),
-                schedule: {
-                    day: day,
-                    time: time,
-                    year: year,
-                },
-                room: room,
+            if (!updatedAppointment) {
+                throw new GraphQLError(
+                    'Something went wrong while updating the appointment',
+                    {
+                        extensions: {
+                            code: 'FAILED',
+                        },
+                    }
+                )
             }
-        )
 
-        if (!updatedAppointment) {
-            throw new GraphQLError(
-                'Something went wrong while updating the appointment',
-                {
-                    extensions: {
-                        code: 'FAILED',
-                    },
-                }
-            )
+            return {
+                success: true,
+                message: 'successfully updated the appointment',
+            }
+        } else {
+            throw new GraphQLError('You are authorized to perform this task', {
+                extensions: {
+                    code: 'FORBIDDEN',
+                },
+            })
         }
 
         return {
@@ -222,4 +198,4 @@ const updateAppointMent = async (
     }
 }
 
-export { createAppointment }
+export { createAppointment, updateAppointMent }
