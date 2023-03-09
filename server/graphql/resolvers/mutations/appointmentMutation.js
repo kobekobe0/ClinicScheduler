@@ -193,12 +193,12 @@ const updateAppointMent = async (
     }
 }
 
-const cancelAppointment = async (parent, { appointmentId }, token) => {
+const cancelAppointment = async (parent, { appointmentId }, { token }) => {
     try {
         console.log('cancelAppointment: started', {
             appointmentId,
         })
-
+        console.log(token)
         const auth = checkAuth(token)
         if (!auth) {
             throw new GraphQLError(
@@ -211,7 +211,7 @@ const cancelAppointment = async (parent, { appointmentId }, token) => {
             )
         }
 
-        const appointment = await Appointments.findOne(appointmentId)
+        const appointment = await Appointments.findOne({ _id: appointmentId })
         if (!appointment) {
             throw new GraphQLError('Cannot find the appointment', {
                 extensions: {
@@ -220,7 +220,24 @@ const cancelAppointment = async (parent, { appointmentId }, token) => {
             })
         }
 
-        if (appointment.doctorId != auth.userId) {
+        if (appointment.doctorId == auth.userId) {
+            const canceledAppointment = await Appointments.findByIdAndUpdate(
+                appointmentId,
+                {
+                    updatedAt: Date.now(),
+                    isCancelled: true,
+                }
+            )
+
+            if (!cancelAppointment) {
+                throw new Error('failed to updated the appointment')
+            }
+
+            return {
+                success: true,
+                message: 'Successfully canceled the appointment',
+            }
+        } else {
             throw new GraphQLError(
                 'You are not authorized to perform this task',
                 {
