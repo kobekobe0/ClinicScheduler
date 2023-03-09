@@ -86,6 +86,7 @@ const userTypeDefs = gql`
         #authentication related
         loginWithPassword(loginInputUser: LoginInput!): AuthResponse
         createUser(registerInputUser: RegisterInput!): AuthResponse
+        createDoctorAccount(registerInputUser: RegisterInput!): AuthResponse
         verifyAccount(verificationCode: String!): ConfirmationAccount
         resendVerification: Boolean
         emailAddressLookUp(email: String!): Boolean
