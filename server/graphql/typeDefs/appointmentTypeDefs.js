@@ -8,8 +8,10 @@ const AppointmentTypeDefs = gql`
         doctorId: String
         patientId: String
         schedule: String #concatenate number
+        time: String
         room: String
         isComplete: Boolean
+        isCancelled: Boolean
     }
 
     type AppointmentResponse {
@@ -24,19 +26,27 @@ const AppointmentTypeDefs = gql`
         time: Float #use 24-hour format
         day: Int
         year: Int
+        month: Int
     }
 
     input AppointmentInputUpdate {
         appointmentId: ID
         room: String
         time: Float #use 24-hour format
+        month: Int
         day: Int
         year: Int
     }
 
+    input UserAppointmentInput {
+        userId: ID
+        appointmentID: ID
+    }
+
     type Query {
-        userAppointMent(userId: String): Appointment
-        allAppointMents: [Appointment]
+        userAppointment(appointmentId: String): Appointment
+        userAppointments(userId: String): [Appointment]
+        allAppointments: [Appointment]
         doctorAppointments(doctorId: String): [Appointment]
     }
 
