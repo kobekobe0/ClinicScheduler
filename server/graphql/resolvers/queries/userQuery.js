@@ -51,3 +51,5 @@ const findUsers = async (parent, { name, page }, { token }) => {
         })
     }
 }
+
+export { findUser, findUsers }
