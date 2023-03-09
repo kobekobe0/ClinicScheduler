@@ -3,8 +3,9 @@ import {
     loginWithPassword,
     createDoctorAccount,
 } from './mutations/userMutation.js'
+import { findUser, findUsers } from './queries/userQuery.js'
 const UserResolvers = {
-    Query: {},
+    Query: { findUser, findUsers },
     Mutation: { createUser, loginWithPassword, createDoctorAccount },
 }
 export default UserResolvers
