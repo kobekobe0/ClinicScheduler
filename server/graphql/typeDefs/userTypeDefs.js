@@ -17,6 +17,9 @@ const userTypeDefs = gql`
         accountSetupProgress: String
         walletId: String
         referralCode: String
+        type: String
+        #type = [doctor, patient]
+        # doctor's account can only be created by admins
         #token: String
     }
 
