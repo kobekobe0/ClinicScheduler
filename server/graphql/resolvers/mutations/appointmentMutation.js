@@ -60,6 +60,7 @@ const createAppointment = async (
         const appointment = await Appointments.findOne({
             doctorId: doctorId,
             patientId: patientId,
+            isComplete: false,
         })
         if (!appointment) {
             const newAppointment = await Appointments.create({
