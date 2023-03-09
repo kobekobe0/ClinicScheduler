@@ -10,8 +10,9 @@ import {
 } from '../../../utils/helper.js'
 import checkAuth from '../../../utils/checkAuth.js'
 import Appointments from '../../../models/Appointment.js'
+import Users from '../../../models/User.js'
 
-const createAppointMent = async (
+const createAppointment = async (
     parent,
     { appointmentInput: { doctorId, patientId, room, time, day, year } },
     { token }
@@ -27,16 +28,35 @@ const createAppointMent = async (
         })
 
         const auth = checkAuth(token)
-         if (!auth) {
-             throw new GraphQLError(
-                 'You are not authorized to perform this action.',
-                 {
-                     extensions: {
-                         code: 'FORBIDDEN',
-                     },
-                 }
-             )
-         }
+        if (!auth) {
+            throw new GraphQLError(
+                'You are not authorized to perform this action.',
+                {
+                    extensions: {
+                        code: 'FORBIDDEN',
+                    },
+                }
+            )
+        }
+
+        const doctor = await Users.findOne({ _id: doctorId })
+        if (!doctor) {
+            throw new GraphQLError('Cannot find the doctor', {
+                extensions: {
+                    code: 'INVALID DOCTOR',
+                },
+            })
+        }
+
+        const patient = await Users.findOne({ _id: patientId })
+        if (!patient) {
+            throw new GraphQLError('Cannot find the patient', {
+                extensions: {
+                    code: 'INVALID PATIENT',
+                },
+            })
+        }
+
         const appointment = await Appointments.findOne({
             doctorId: doctorId,
             patientId: patientId,
@@ -65,7 +85,7 @@ const createAppointMent = async (
                 message: 'Successfully created the appointment',
             }
         } else {
-            throw new Error('User already exists')
+            throw new Error('Appointment already exists')
         }
     } catch (error) {
         console.error('createAppointment: exception occurred', {
@@ -81,4 +101,4 @@ const createAppointMent = async (
     }
 }
 
-export { createAppointMent }
+export { createAppointment }
