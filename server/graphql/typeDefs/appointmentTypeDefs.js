@@ -26,6 +26,14 @@ const AppointmentTypeDefs = gql`
         year: Int
     }
 
+    input AppointmentInputUpdate {
+        appointmentId: ID
+        room: String
+        time: Float #use 24-hour format
+        day: Int
+        year: Int
+    }
+
     type Query {
         userAppointMent(userId: String): Appointment
         allAppointMents: [Appointment]
@@ -37,7 +45,7 @@ const AppointmentTypeDefs = gql`
             appointmentInput: AppointmentInput
         ): AppointmentResponse
         updateAppointMent(
-            appointmentInput: AppointmentInput
+            appointmentInput: AppointmentInputUpdate
         ): AppointmentResponse
         cancelAppointment(appointmentId: String): AppointmentResponse
         completeAppointment(appointmentId: String): AppointmentResponse
