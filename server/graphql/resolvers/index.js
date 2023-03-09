@@ -7,6 +7,7 @@ import {
 import {
     createAppointment,
     updateAppointMent,
+    cancelAppointment,
 } from './mutations/appointmentMutation.js'
 
 import { findUser, findUsers } from './queries/userQuery.js'
@@ -18,6 +19,7 @@ const UserResolvers = {
         createDoctorAccount,
         createAppointment,
         updateAppointMent,
+        cancelAppointment,
     },
 }
 export default UserResolvers
