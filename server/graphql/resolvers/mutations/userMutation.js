@@ -73,11 +73,7 @@ const loginWithPassword = async (
             //   { algorithm: "HS256", subject: user?._id, expiresIn: "24h" }
             // );
 
-            const signedToken = jwtAccessSign(
-                user?._id,
-                user?.email?.address,
-                process.env.APP_SECRET_KEY
-            )
+            const signedToken = jwtAccessSign(user?._id, user?.email?.address)
 
             return {
                 token: signedToken,
