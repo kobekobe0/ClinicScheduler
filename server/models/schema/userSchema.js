@@ -62,7 +62,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    walletId: {
+    type: {
         type: String,
         required: true,
     },
