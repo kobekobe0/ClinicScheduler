@@ -190,7 +190,7 @@ const updateAppointMent = async (
             }
         )
 
-        if (!updateAppointMent) {
+        if (!updatedAppointment) {
             throw new GraphQLError(
                 'Something went wrong while updating the appointment',
                 {
