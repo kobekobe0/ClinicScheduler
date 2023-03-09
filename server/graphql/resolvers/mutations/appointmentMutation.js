@@ -247,14 +247,6 @@ const cancelAppointment = async (parent, { appointmentId }, { token }) => {
                 }
             )
         }
-
-        const canceledAppointment = await Appointments.findByIdAndUpdate(
-            appointmentId,
-            {
-                updatedAt: Date.now(),
-                isCancelled: true,
-            }
-        )
     } catch (error) {
         console.error('cancelAppointment: exception occurred', {
             errorMessage: error?.message,
@@ -269,4 +261,77 @@ const cancelAppointment = async (parent, { appointmentId }, { token }) => {
     }
 }
 
-export { createAppointment, updateAppointMent, cancelAppointment }
+const completeAppointment = async (parent, { appointmentId }, { token }) => {
+    try {
+        console.log('completeAppointment: started', {
+            appointmentId,
+        })
+        console.log(token)
+        const auth = checkAuth(token)
+        if (!auth) {
+            throw new GraphQLError(
+                'You are not authorized to perform this action.',
+                {
+                    extensions: {
+                        code: 'FORBIDDEN',
+                    },
+                }
+            )
+        }
+
+        const appointment = await Appointments.findOne({ _id: appointmentId })
+        if (!appointment) {
+            throw new GraphQLError('Cannot find the appointment', {
+                extensions: {
+                    code: 'INVALID ID',
+                },
+            })
+        }
+
+        if (appointment.doctorId == auth.userId) {
+            const completedAppointment = await Appointments.findByIdAndUpdate(
+                appointmentId,
+                {
+                    updatedAt: Date.now(),
+                    isComplete: true,
+                }
+            )
+
+            if (!completedAppointment) {
+                throw new Error('failed to updated the appointment')
+            }
+
+            return {
+                success: true,
+                message: 'Successfully completed the appointment',
+            }
+        } else {
+            throw new GraphQLError(
+                'You are not authorized to perform this task',
+                {
+                    extensions: {
+                        code: 'FORBIDDEN',
+                    },
+                }
+            )
+        }
+    } catch (error) {
+        console.error('updateAppointment: exception occurred', {
+            errorMessage: error?.message,
+            details: { error },
+        })
+        throw new GraphQLError(`See Errors: ${error?.message}`, {
+            extensions: {
+                code: error?.extensions?.code || 'SCHEDULER_MUTATION_ERROR',
+            },
+            originalError: error,
+        })
+    }
+}
+
+export {
+    createAppointment,
+    updateAppointMent,
+    cancelAppointment,
+    completeAppointment,
+}
