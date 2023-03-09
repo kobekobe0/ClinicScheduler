@@ -80,6 +80,8 @@ const userTypeDefs = gql`
     type Query {
         currentUser: CurrentUser!
         checkIfSecureCodeIsValid(secureCode: String!): Boolean
+        findUser: CurrentUser!
+        findUsers: [CurrentUser]
     }
 
     type Mutation {
