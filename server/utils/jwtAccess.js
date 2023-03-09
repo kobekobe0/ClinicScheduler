@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
 /**
  *
  * Sign JWT
@@ -10,12 +10,11 @@ import jwt from "jsonwebtoken";
  * @returns JSON WEB TOKEN
  */
 export const jwtAccessSign = (userId, email, username, expiration) =>
-  jwt.sign(
-    {
-      userId,
-      email,
-      username,
-    },
-    process.env.APP_SECRET_KEY || "dev",
-    { expiresIn: "24h" }
-  );
+    jwt.sign(
+        {
+            userId,
+            email,
+        },
+        process.env.APP_SECRET_KEY || 'dev',
+        { expiresIn: '24h' }
+    )
