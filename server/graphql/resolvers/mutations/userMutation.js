@@ -73,12 +73,14 @@ const loginWithPassword = async (
             //   { algorithm: "HS256", subject: user?._id, expiresIn: "24h" }
             // );
 
+            const signedToken = jwtAccessSign(
+                user?._id,
+                user?.email?.address,
+                process.env.APP_SECRET_KEY
+            )
+
             return {
-                token: jwtAccessSign(
-                    user?._id,
-                    user?.email?.address,
-                    user?.profile?.username
-                ),
+                token: signedToken,
             }
         } else {
             throw new Error('User not found.')
