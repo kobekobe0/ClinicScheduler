@@ -4,6 +4,7 @@ import { GraphQLError } from 'graphql'
 import * as dotenv from 'dotenv'
 dotenv.config()
 import bcrypt from 'bcryptjs'
+import { USER_PER_PAGE } from '../../../utils/constants.js'
 
 const findUser = async (parent, { email }, { token }) => {
     try {
@@ -16,6 +17,29 @@ const findUser = async (parent, { email }, { token }) => {
         return user
     } catch (error) {
         console.error('findUser: exception occurred', {
+            errorMessage: error?.message,
+            details: { error },
+        })
+        throw new GraphQLError(`See Errors: ${error?.message}`, {
+            extensions: {
+                code: error?.extensions?.code || 'SCHEDULER_MUTATION_ERROR',
+            },
+            originalError: error,
+        })
+    }
+}
+
+const findUsers = async (parent, { name, page }, { token }) => {
+    try {
+        console.log('finding users: started', { name: name, page: page })
+        //pagination
+        const users = await Users.find({ name })
+            .skip(page * USER_PER_PAGE)
+            .limit(USER_PER_PAGE)
+
+        return users
+    } catch (error) {
+        console.error('findUsers: exception occurred', {
             errorMessage: error?.message,
             details: { error },
         })
