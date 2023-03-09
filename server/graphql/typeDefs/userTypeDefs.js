@@ -15,12 +15,19 @@ const userTypeDefs = gql`
         name: String
         email: String
         accountSetupProgress: String
-        walletId: String
         referralCode: String
         type: String
         #type = [doctor, patient]
         # doctor's account can only be created by admins
         #token: String
+    }
+
+    type User {
+        userId: ID
+        name: String
+        type: String
+        email: String
+        #pfp will be queried using userID
     }
 
     input LoginInput {
@@ -78,10 +85,10 @@ const userTypeDefs = gql`
     }
 
     type Query {
-        currentUser: CurrentUser!
+        currentUser: CurrentUser
         checkIfSecureCodeIsValid(secureCode: String!): Boolean
-        findUser: CurrentUser!
-        findUsers: [CurrentUser]
+        findUser(email: String): CurrentUser
+        findUsers(name: String): [User]
     }
 
     type Mutation {
