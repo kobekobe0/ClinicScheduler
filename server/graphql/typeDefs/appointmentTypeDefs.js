@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 import gql from 'graphql-tag'
 
-const appointmentTypeDefs = gql`
+const AppointmentTypeDefs = gql`
     type Appointment {
         appointmentId: String
         doctorId: String
@@ -12,7 +12,7 @@ const appointmentTypeDefs = gql`
         isComplete: Boolean
     }
 
-    type AppoinmentResponse {
+    type AppointmentResponse {
         success: Boolean
         message: String
     }
@@ -33,13 +33,15 @@ const appointmentTypeDefs = gql`
     }
 
     type Mutation {
-        createAppointMent(
+        createAppointment(
             appointmentInput: AppointmentInput
         ): AppointmentResponse
-        updateAppointMent(appointmentInput): AppoinmentResponse
-        cancelAppointment(appointmentId: String): AppoinmentResponse
-        completeAppointment(appointmentId: String): AppoinmentResponse
+        updateAppointMent(
+            appointmentInput: AppointmentInput
+        ): AppointmentResponse
+        cancelAppointment(appointmentId: String): AppointmentResponse
+        completeAppointment(appointmentId: String): AppointmentResponse
     }
 `
 
-export default appointmentTypeDefs
+export default AppointmentTypeDefs
