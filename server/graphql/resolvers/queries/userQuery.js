@@ -43,9 +43,19 @@ const findUsers = async (parent, { name, page }, { token }) => {
             .skip(page * USER_PER_PAGE)
             .limit(USER_PER_PAGE)
 
-        let queried
+        let queriedUsers = []
 
-        return users
+        console.log(users)
+        users.forEach((user) => {
+            queriedUsers.push({
+                name: user.profile,
+                email: user.email.address,
+                type: user.type,
+                userId: user._id,
+            })
+        })
+
+        return queriedUsers
     } catch (error) {
         console.error('findUsers: exception occurred', {
             errorMessage: error?.message,
