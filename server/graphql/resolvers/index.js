@@ -4,3 +4,10 @@ const UserResolvers = {
     Mutation: { createUser, loginWithPassword },
 }
 export default UserResolvers
+
+/*TODO
+- verifyAccount mutation
+- sending verification to user's email
+- changePassword
+- update profile
+*/
