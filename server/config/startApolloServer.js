@@ -10,13 +10,14 @@ import userTypeDefs from '../graphql/typeDefs/userTypeDefs.js'
 import UserResolvers from '../graphql/resolvers/index.js'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import walletTypDefs from '../graphql/typeDefs/walletTypeDefs.js'
+import AppointmentTypeDefs from '../graphql/typeDefs/appointmentTypeDefs.js'
 
 const startApolloServer = async () => {
     const app = express()
     const httpServer = http.createServer(app)
     const server = new ApolloServer({
         schema: makeExecutableSchema({
-            typeDefs: [userTypeDefs, walletTypDefs],
+            typeDefs: [userTypeDefs, walletTypDefs, AppointmentTypeDefs],
             resolvers: [UserResolvers],
         }),
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
