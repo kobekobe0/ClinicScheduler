@@ -24,6 +24,7 @@ const createAppointment = async (
             room,
             time,
             day,
+            month,
             year,
         })
 
@@ -70,6 +71,7 @@ const createAppointment = async (
                 patientId: patientId,
                 schedule: {
                     time: time,
+                    month: month,
                     day: day,
                     year: year,
                 },
@@ -114,6 +116,7 @@ const updateAppointMent = async (
             room,
             time,
             day,
+            month,
             year,
         })
 
@@ -150,6 +153,7 @@ const updateAppointMent = async (
                         day: day,
                         time: time,
                         year: year,
+                        month: month,
                     },
                     room: room,
                 }
