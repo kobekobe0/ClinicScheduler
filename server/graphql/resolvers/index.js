@@ -1,7 +1,11 @@
-import { createUser, loginWithPassword } from './mutations/userMutation.js'
+import {
+    createUser,
+    loginWithPassword,
+    createDoctorAccount,
+} from './mutations/userMutation.js'
 const UserResolvers = {
     Query: {},
-    Mutation: { createUser, loginWithPassword },
+    Mutation: { createUser, loginWithPassword, createDoctorAccount },
 }
 export default UserResolvers
 

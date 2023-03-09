@@ -691,4 +691,5 @@ export {
     //emailAddressLookUp, // passed
     changePasswordSecurely, //passed
     updateUserProfileInformation,
+    createDoctorAccount,
 }
