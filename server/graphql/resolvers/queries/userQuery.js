@@ -14,7 +14,13 @@ const findUser = async (parent, { email }, { token }) => {
         if (!user) {
             throw new Error("Can't find user or user didn't exists")
         }
-        return user
+        return {
+            userId: user?._id,
+            name: user?.profile,
+            email: user?.email?.address,
+            accountSetupProgress: user?.accountSetupProgress,
+            type: user?.type,
+        }
     } catch (error) {
         console.error('findUser: exception occurred', {
             errorMessage: error?.message,
@@ -33,9 +39,11 @@ const findUsers = async (parent, { name, page }, { token }) => {
     try {
         console.log('finding users: started', { name: name, page: page })
         //pagination
-        const users = await Users.find({ name })
+        const users = await Users.find({ profile: name })
             .skip(page * USER_PER_PAGE)
             .limit(USER_PER_PAGE)
+
+        let queried
 
         return users
     } catch (error) {
