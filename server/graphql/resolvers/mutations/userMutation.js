@@ -231,59 +231,59 @@ const createUser = async (
  *
  */
 
-const resendVerification = async (parent, args, { token }) => {
-    try {
-        console.log('resendVerification: started', {})
+// const resendVerification = async (parent, args, { token }) => {
+//     try {
+//         console.log('resendVerification: started', {})
 
-        const auth = checkAuth(token)
-        if (!auth) {
-            throw new GraphQLError(
-                'You are not authorized to perform this action.',
-                {
-                    extensions: {
-                        code: 'FORBIDDEN',
-                    },
-                }
-            )
-        }
+//         const auth = checkAuth(token)
+//         if (!auth) {
+//             throw new GraphQLError(
+//                 'You are not authorized to perform this action.',
+//                 {
+//                     extensions: {
+//                         code: 'FORBIDDEN',
+//                     },
+//                 }
+//             )
+//         }
 
-        const user = await Users.findOne({
-            _id: auth?.userId,
-            'email.verified': false,
-        }).exec()
+//         const user = await Users.findOne({
+//             _id: auth?.userId,
+//             'email.verified': false,
+//         }).exec()
 
-        if (user) {
-            const code = loginTokenHelper()
-            await Users.updateOne(
-                { _id: user._id },
-                { 'email.verificationCode': code }
-            )
+//         if (user) {
+//             const code = loginTokenHelper()
+//             await Users.updateOne(
+//                 { _id: user._id },
+//                 { 'email.verificationCode': code }
+//             )
 
-            sendEmail(
-                process.env.MEDSURF_EMAIL || 'admin@medsurf.co',
-                user?.email?.address,
-                'Confirm your account',
-                'Please verify your account to continue using MedSurf platform. Thank you!',
-                `<br><br><h2>Hello ${user?.profile?.fullName}, Welcome to MedSurf. Please verify your account now 🚀</h2><br><br><h1>${code} (code)</h1>`
-            )
+//             sendEmail(
+//                 process.env.MEDSURF_EMAIL || 'admin@medsurf.co',
+//                 user?.email?.address,
+//                 'Confirm your account',
+//                 'Please verify your account to continue using MedSurf platform. Thank you!',
+//                 `<br><br><h2>Hello ${user?.profile?.fullName}, Welcome to MedSurf. Please verify your account now 🚀</h2><br><br><h1>${code} (code)</h1>`
+//             )
 
-            return true
-        } else {
-            return false
-        }
-    } catch (error) {
-        console.error('resendVerification: exception occurred', {
-            errorMessage: error?.message,
-            details: { error },
-        })
-        throw new GraphQLError(`See Errors: ${error?.message}`, {
-            extensions: {
-                code: error?.extensions?.code || 'MEDSURFAPI_MUTATION_ERROR',
-            },
-            originalError: error,
-        })
-    }
-}
+//             return true
+//         } else {
+//             return false
+//         }
+//     } catch (error) {
+//         console.error('resendVerification: exception occurred', {
+//             errorMessage: error?.message,
+//             details: { error },
+//         })
+//         throw new GraphQLError(`See Errors: ${error?.message}`, {
+//             extensions: {
+//                 code: error?.extensions?.code || 'MEDSURFAPI_MUTATION_ERROR',
+//             },
+//             originalError: error,
+//         })
+//     }
+// }
 
 /**
  * Update account to be verified base on the verification code passed
@@ -294,64 +294,64 @@ const resendVerification = async (parent, args, { token }) => {
  * @returns Object
  */
 
-const verifyAccount = async (parent, { verificationCode }, { token }) => {
-    try {
-        console.log('verifyAccount: started', { verificationCode })
+// const verifyAccount = async (parent, { verificationCode }, { token }) => {
+//     try {
+//         console.log('verifyAccount: started', { verificationCode })
 
-        const auth = checkAuth(token)
-        if (!auth) {
-            throw new GraphQLError(
-                'You are not authorized to perform this action.',
-                {
-                    extensions: {
-                        code: 'FORBIDDEN',
-                    },
-                }
-            )
-        }
+//         const auth = checkAuth(token)
+//         if (!auth) {
+//             throw new GraphQLError(
+//                 'You are not authorized to perform this action.',
+//                 {
+//                     extensions: {
+//                         code: 'FORBIDDEN',
+//                     },
+//                 }
+//             )
+//         }
 
-        const user = await Users.findOne({
-            _id: auth?.userId,
-            'email.verificationCode': verificationCode,
-            'email.verificationEmailSent': true,
-        }).exec()
-        if (user) {
-            console.log('verifyAccount: activate user', { verificationCode })
-            //update user to be active
-            const code = loginTokenHelper()
-            await Users.updateOne(
-                { _id: user._id },
-                {
-                    'email.verified': true,
-                    'email.verificationCode': code,
-                    'email.verificationEmailSent': false,
-                    accountSetupProgress: 'pending-profile',
-                }
-            )
-            return {
-                userId: auth?.userId,
-                confirmed: true,
-            }
-        } else {
-            console.log('verifyAccount: user not found', { verificationCode })
-            return {
-                userId: auth?.userId,
-                confirmed: false,
-            }
-        }
-    } catch (error) {
-        console.error('verifyAccount: exception occurred', {
-            errorMessage: error?.message,
-            details: { error },
-        })
-        throw new GraphQLError(`See Errors: ${error?.message}`, {
-            extensions: {
-                code: error?.extensions?.code || 'MEDSURFAPI_MUTATION_ERROR',
-            },
-            originalError: error,
-        })
-    }
-}
+//         const user = await Users.findOne({
+//             _id: auth?.userId,
+//             'email.verificationCode': verificationCode,
+//             'email.verificationEmailSent': true,
+//         }).exec()
+//         if (user) {
+//             console.log('verifyAccount: activate user', { verificationCode })
+//             //update user to be active
+//             const code = loginTokenHelper()
+//             await Users.updateOne(
+//                 { _id: user._id },
+//                 {
+//                     'email.verified': true,
+//                     'email.verificationCode': code,
+//                     'email.verificationEmailSent': false,
+//                     accountSetupProgress: 'pending-profile',
+//                 }
+//             )
+//             return {
+//                 userId: auth?.userId,
+//                 confirmed: true,
+//             }
+//         } else {
+//             console.log('verifyAccount: user not found', { verificationCode })
+//             return {
+//                 userId: auth?.userId,
+//                 confirmed: false,
+//             }
+//         }
+//     } catch (error) {
+//         console.error('verifyAccount: exception occurred', {
+//             errorMessage: error?.message,
+//             details: { error },
+//         })
+//         throw new GraphQLError(`See Errors: ${error?.message}`, {
+//             extensions: {
+//                 code: error?.extensions?.code || 'MEDSURFAPI_MUTATION_ERROR',
+//             },
+//             originalError: error,
+//         })
+//     }
+// }
 
 /**
  * Email look up if email exists we allow change password/forgot password workflow
@@ -362,50 +362,50 @@ const verifyAccount = async (parent, { verificationCode }, { token }) => {
  * @returns Boolean
  */
 
-const emailAddressLookUp = async (parent, { email }, context) => {
-    try {
-        console.log('emailAddressLookUp: started', { email })
-        const secureCode = randomStringGenerator()
-        const user = await Users.findOne({
-            'email.address': email,
-            'email.verified': true,
-        }).exec()
-        if (user) {
-            console.log(
-                'emailAddressLookUp: sending and settings up secure link',
-                {
-                    email,
-                }
-            )
-            await Users.updateOne(
-                { _id: user._id },
-                {
-                    'email.verificationCode': String(secureCode),
-                    'email.verificationEmailSent': true,
-                }
-            )
-            sendEmail(
-                process.env.MEDSURF_EMAIL || 'admin@medsurf.co',
-                user?.email?.address,
-                'Change your password',
-                'Change your password securely 🔑',
-                `<br><br><h2>Hello ${user?.profile?.fullName}, We understand that you want to regain your account access. Please click this <a href="${process.env.CLIENT_HOSTNAME}/forgot-password?secure=${secureCode}" target="_blank">Link </a> to proceed with the password change.  🚀</h2><br><br> <b>Medsurf Team</b>`
-            )
-        }
-        return !!user
-    } catch (error) {
-        console.error('emailAddressLookUp: exception occurred', {
-            errorMessage: error?.message,
-            details: { error },
-        })
-        throw new GraphQLError(`See Errors: ${error?.message}`, {
-            extensions: {
-                code: error?.extensions?.code || 'MEDSURFAPI_MUTATION_ERROR',
-            },
-            originalError: error,
-        })
-    }
-}
+// const emailAddressLookUp = async (parent, { email }, context) => {
+//     try {
+//         console.log('emailAddressLookUp: started', { email })
+//         const secureCode = randomStringGenerator()
+//         const user = await Users.findOne({
+//             'email.address': email,
+//             'email.verified': true,
+//         }).exec()
+//         if (user) {
+//             console.log(
+//                 'emailAddressLookUp: sending and settings up secure link',
+//                 {
+//                     email,
+//                 }
+//             )
+//             await Users.updateOne(
+//                 { _id: user._id },
+//                 {
+//                     'email.verificationCode': String(secureCode),
+//                     'email.verificationEmailSent': true,
+//                 }
+//             )
+//             sendEmail(
+//                 process.env.MEDSURF_EMAIL || 'admin@medsurf.co',
+//                 user?.email?.address,
+//                 'Change your password',
+//                 'Change your password securely 🔑',
+//                 `<br><br><h2>Hello ${user?.profile?.fullName}, We understand that you want to regain your account access. Please click this <a href="${process.env.CLIENT_HOSTNAME}/forgot-password?secure=${secureCode}" target="_blank">Link </a> to proceed with the password change.  🚀</h2><br><br> <b>Medsurf Team</b>`
+//             )
+//         }
+//         return !!user
+//     } catch (error) {
+//         console.error('emailAddressLookUp: exception occurred', {
+//             errorMessage: error?.message,
+//             details: { error },
+//         })
+//         throw new GraphQLError(`See Errors: ${error?.message}`, {
+//             extensions: {
+//                 code: error?.extensions?.code || 'MEDSURFAPI_MUTATION_ERROR',
+//             },
+//             originalError: error,
+//         })
+//     }
+// }
 
 /**
  * Change password securely using the securecode provided on query link
@@ -575,154 +575,15 @@ const updateUserProfileInformation = async (
     }
 }
 
-const manipulateUserProfileLink = async (
-    parent,
-    {
-        userProfileLinksInput: { type, label, link },
-        socialMediaLinkId,
-        operationType,
-    },
-    { token }
-) => {
-    try {
-        console.log('changingUserProfileLink: started', {
-            type: type ? type : 'not specified',
-            label: label ? label : 'not specified',
-            link: link ? link : 'not specified',
-            socialMediaLinkId: socialMediaLinkId
-                ? socialMediaLinkId
-                : 'not specified',
-        })
-        const auth = checkAuth(token)
-        if (!auth) {
-            throw new GraphQLError(
-                'You are not authorized to perform this action.',
-                {
-                    extensions: {
-                        code: 'FORBIDDEN',
-                    },
-                }
-            )
-        }
 
-        const userToBeUpdated = Users.findOne({ email: auth.email })
-        if (!userToBeUpdated) {
-            throw new Error('Specific user cannot be found.')
-        }
-
-        if (operationType == 'DELETE_LINK') {
-            await userToBeUpdated.updateOne({
-                $pull: { socials: { _id: socialMediaLinkId } },
-            })
-
-            return {
-                confirmed: true,
-                operation: 'DELETE_LINK',
-            }
-        } else {
-            //assuming that unchanged values are still thrown by FE
-            let errs = []
-
-            if (label?.length > MAX_LABEL_TYPE_LENGTH) {
-                errs.push('Invalid label.')
-            }
-
-            if (type?.length > MAX_LABEL_TYPE_LENGTH) {
-                errs.push('Invalid type.')
-            }
-
-            if (label != '') {
-                if (!type?.match(/^[\w a-z]+$/)) {
-                    errs.push('Only alphabets are allowed on type field.')
-                }
-            }
-
-            if (label != '') {
-                if (!label?.match(/^[\w 0-9a-z]+$/)) {
-                    errs.push('Only alphanumerics are allowed on label field.')
-                }
-            }
-
-            if (link?.trim() == '') {
-                throw new Error('Please enter a link')
-            }
-
-            if (link) {
-                if (
-                    !SOCIAL_REGEX.test(link) ||
-                    !WEBSITE_REGEX.test(link) ||
-                    !SHORTSITE_REGEX.test(link)
-                ) {
-                    throw new Error('Enter a valid link')
-                }
-                if (link.length > MAX_LINK_LENGTH) {
-                    errs.push('Invalid link.')
-                }
-            }
-
-            if (errs.length != 0) {
-                throw new Error(errs)
-            }
-
-            switch (operationType) {
-                case 'ADD_LINK':
-                    const objectToBePushed = {
-                        _id: idGeneratorHelper('scl'),
-                        label: label ? label : '',
-                        type: type ? type : '',
-                        link: link,
-                    }
-
-                    await userToBeUpdated.updateOne({
-                        $push: { socials: [objectToBePushed] },
-                    })
-
-                    return {
-                        confirmed: true,
-                        operation: 'ADD_LINK',
-                    }
-
-                case 'UPDATE_LINK':
-                    await userToBeUpdated.update(
-                        {
-                            'socials._id': socialMediaLinkId,
-                        },
-                        {
-                            $set: {
-                                'socials.$.type': type ? type : '',
-                                'socials.$.label': label ? label : '',
-                                'socials.$.link': link,
-                            },
-                        }
-                    )
-
-                    return {
-                        confirmed: true,
-                        operation: 'UPDATE_LINK',
-                    }
-            }
-        }
-    } catch (error) {
-        console.error('changingProfileLinks: exception occurred', {
-            errorMessage: error?.message,
-            details: { error },
-        })
-        throw new GraphQLError(`See Errors: ${error?.message}`, {
-            extensions: {
-                code: error?.extensions?.code || 'MEDSURFAPI_MUTATION_ERROR',
-            },
-            originalError: error,
-        })
-    }
-}
 
 export {
     loginWithPassword, // passed
     createUser, // passed
-    resendVerification, // passed
-    verifyAccount, // passed
-    emailAddressLookUp, // passed
+    //resendVerification, // passed
+   // verifyAccount, // passed
+    //emailAddressLookUp, // passed
     changePasswordSecurely, //passed
     updateUserProfileInformation,
-    manipulateUserProfileLink,
+  
 }
