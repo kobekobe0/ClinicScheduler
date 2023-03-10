@@ -45,8 +45,8 @@ const AppointmentTypeDefs = gql`
 
     type Query {
         userAppointment(appointmentId: String): Appointment
-        userAppointments: [Appointment]
-        allAppointments: [Appointment]
+        userAppointments(page: Int): [Appointment]
+        allAppointments(page: Int): [Appointment] #admin level
         doctorAppointments(doctorId: String): [Appointment]
     }
 
