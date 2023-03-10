@@ -70,4 +70,61 @@ const userAppointment = async (parent, { appointmentId }, { token }) => {
     }
 }
 
-export { userAppointment }
+const userAppointments = async (parent, _, { token }) => {
+    try {
+        console.log('userAppointments query: started')
+
+        const auth = checkAuth(token)
+        if (!auth) {
+            throw new GraphQLError(
+                'You are not authorized to perform this action.',
+                {
+                    extensions: {
+                        code: 'FORBIDDEN',
+                    },
+                }
+            )
+        }
+
+        const appointments = await Appointments.find({
+            $or: [{ patientId: auth.userId }, { doctorId: auth.userId }],
+        })
+        if (!appointments) {
+            throw new GraphQLError('Cannot find the appointment', {
+                extensions: {
+                    code: 'INVALID ID',
+                },
+            })
+        }
+
+        let queriedAppointments = []
+
+        appointments.forEach((appointment) => {
+            queriedAppointments.push({
+                appointmentId: appointment?._id,
+                doctorId: appointment?.doctorId,
+                patientId: appointment?.patientId,
+                schedule: `${appointment?.schedule?.day}/${appointment?.schedule?.month}/${appointment?.schedule?.year}`,
+                time: `${appointment?.schedule?.time}`,
+                room: appointment?.room,
+                isComplete: appointment?.isComplete,
+                isCancelled: appointment?.isCancelled,
+            })
+        })
+
+        return queriedAppointments
+    } catch (error) {
+        console.error('userAppointments: exception occurred', {
+            errorMessage: error?.message,
+            details: { error },
+        })
+        throw new GraphQLError(`See Errors: ${error?.message}`, {
+            extensions: {
+                code: error?.extensions?.code || 'SCHEDULER_QUERY_ERROR',
+            },
+            originalError: error,
+        })
+    }
+}
+
+export { userAppointment, userAppointments }
