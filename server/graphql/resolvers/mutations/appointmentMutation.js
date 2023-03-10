@@ -14,7 +14,7 @@ import Users from '../../../models/User.js'
 
 const createAppointment = async (
     parent,
-    { appointmentInput: { doctorId, patientId, room, time, day, year } },
+    { appointmentInput: { doctorId, patientId, room, time, day, year, month } },
     { token }
 ) => {
     try {
@@ -40,7 +40,7 @@ const createAppointment = async (
             )
         }
 
-        const doctor = await Users.findOne({ _id: doctorId })
+        const doctor = await Users.findOne({ _id: doctorId, type: 'DOCTOR' })
         if (!doctor) {
             throw new GraphQLError('Cannot find the doctor', {
                 extensions: {
@@ -49,7 +49,7 @@ const createAppointment = async (
             })
         }
 
-        const patient = await Users.findOne({ _id: patientId })
+        const patient = await Users.findOne({ _id: patientId, type: 'PATIENT' })
         if (!patient) {
             throw new GraphQLError('Cannot find the patient', {
                 extensions: {
