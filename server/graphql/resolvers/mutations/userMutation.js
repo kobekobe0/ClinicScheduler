@@ -275,6 +275,10 @@ const createDoctorAccount = async (
                 errs.push('Password do not match')
             }
 
+            if (!specialization) {
+                errs.push('Specialization is required')
+            }
+
             if (errs?.length) {
                 console.log(errs)
                 throw new Error(errs)
