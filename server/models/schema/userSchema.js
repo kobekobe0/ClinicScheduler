@@ -67,6 +67,7 @@ const userSchema = new Schema({
         required: true,
     },
     referralCode: String,
+    specialization: String,
 })
 
 export default userSchema
