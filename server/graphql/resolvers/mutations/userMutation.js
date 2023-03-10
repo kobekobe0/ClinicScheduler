@@ -217,6 +217,7 @@ const createDoctorAccount = async (
             password,
             confirmPassword,
             acceptedAllPolicies,
+            specialization,
         },
     },
     { token }
@@ -299,6 +300,7 @@ const createDoctorAccount = async (
                 acceptedAllPolicies,
                 accountSetupProgress: 'verified',
                 type: 'DOCTOR',
+                specialization: specialization,
             })
             console.log('createUser: user created', {
                 newUserInformation: newUser,
