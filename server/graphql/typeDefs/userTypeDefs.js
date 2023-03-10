@@ -43,6 +43,14 @@ const userTypeDefs = gql`
         confirmPassword: String!
         acceptedAllPolicies: Boolean!
     }
+    input RegisterInputDoctor {
+        name: String!
+        email: String!
+        password: String!
+        confirmPassword: String!
+        acceptedAllPolicies: Boolean!
+        specialization: String!
+    }
 
     type ConfirmationAccount {
         userId: String
@@ -95,7 +103,9 @@ const userTypeDefs = gql`
         #authentication related
         loginWithPassword(loginInputUser: LoginInput!): AuthResponse
         createUser(registerInputUser: RegisterInput!): AuthResponse
-        createDoctorAccount(registerInputUser: RegisterInput!): AuthResponse
+        createDoctorAccount(
+            registerInputUser: RegisterInputDoctor!
+        ): AuthResponse
         verifyAccount(verificationCode: String!): ConfirmationAccount
         resendVerification: Boolean
         emailAddressLookUp(email: String!): Boolean
