@@ -32,3 +32,4 @@ export const ALLOWED_COMPANY_TYPE = [
 ]
 
 export const USER_PER_PAGE = 5
+export const APPOINTMENT_PER_PAGE = 5
