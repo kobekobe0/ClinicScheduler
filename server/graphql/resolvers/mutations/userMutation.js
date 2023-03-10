@@ -112,6 +112,7 @@ const createUser = async (
             password,
             confirmPassword,
             acceptedAllPolicies,
+            phoneNumber,
         },
     },
     { token }
@@ -123,6 +124,7 @@ const createUser = async (
             password,
             confirmPassword,
             acceptedAllPolicies,
+            phoneNumber,
         })
 
         const user = await Users.findOne({ 'email.address': email })
@@ -139,6 +141,10 @@ const createUser = async (
 
             if (password !== confirmPassword) {
                 errs.push('Password do not match')
+            }
+
+            if (!phoneNumber) {
+                errs.push('Phone number is required')
             }
 
             if (errs?.length) {
@@ -166,6 +172,7 @@ const createUser = async (
                 acceptedAllPolicies,
                 accountSetupProgress: 'verify-account',
                 type: 'PATIENT',
+                phoneNumber: phoneNumber,
                 referralCode:
                     'make a helper that generates referral code, make referralCode unique on schema',
             })
@@ -218,6 +225,7 @@ const createDoctorAccount = async (
             confirmPassword,
             acceptedAllPolicies,
             specialization,
+            phoneNumber,
         },
     },
     { token }
@@ -231,6 +239,8 @@ const createDoctorAccount = async (
                 password,
                 confirmPassword,
                 acceptedAllPolicies,
+                phoneNumber,
+                specialization,
             },
             { token }
         )
@@ -275,6 +285,10 @@ const createDoctorAccount = async (
                 errs.push('Password do not match')
             }
 
+            if (!phoneNumber) {
+                errs.push('Phone number is required')
+            }
+
             if (!specialization) {
                 errs.push('Specialization is required')
             }
@@ -305,6 +319,7 @@ const createDoctorAccount = async (
                 accountSetupProgress: 'verified',
                 type: 'DOCTOR',
                 specialization: specialization,
+                phoneNumber: phoneNumber,
             })
             console.log('createUser: user created', {
                 newUserInformation: newUser,
