@@ -45,7 +45,7 @@ const AppointmentTypeDefs = gql`
 
     type Query {
         userAppointment(appointmentId: String): Appointment
-        userAppointments(userId: String): [Appointment]
+        userAppointments: [Appointment]
         allAppointments: [Appointment]
         doctorAppointments(doctorId: String): [Appointment]
     }
