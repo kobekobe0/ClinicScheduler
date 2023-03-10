@@ -7,6 +7,7 @@ import {
 import {
     userAppointment,
     userAppointments,
+    allAppointments,
 } from './queries/appointmentQuery.js'
 
 import {
@@ -18,7 +19,13 @@ import {
 
 import { findUser, findUsers } from './queries/userQuery.js'
 const UserResolvers = {
-    Query: { findUser, findUsers, userAppointment, userAppointments },
+    Query: {
+        findUser,
+        findUsers,
+        userAppointment,
+        userAppointments,
+        allAppointments,
+    },
     Mutation: {
         createUser,
         loginWithPassword,
