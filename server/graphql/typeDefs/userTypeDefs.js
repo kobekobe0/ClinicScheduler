@@ -10,6 +10,10 @@ const userTypeDefs = gql`
     #     username: String
     #   }
 
+    #TODO
+    #Add doctor type
+    #Add query for all doctors
+
     type CurrentUser {
         userId: ID #_id
         name: String
@@ -17,6 +21,7 @@ const userTypeDefs = gql`
         accountSetupProgress: String
         referralCode: String
         type: String
+        specialization: String
         #type = [doctor, patient]
         # doctor's account can only be created by admins
         #token: String
@@ -42,6 +47,7 @@ const userTypeDefs = gql`
         password: String!
         confirmPassword: String!
         acceptedAllPolicies: Boolean!
+        phoneNumber: String!
     }
     input RegisterInputDoctor {
         name: String!
@@ -50,6 +56,7 @@ const userTypeDefs = gql`
         confirmPassword: String!
         acceptedAllPolicies: Boolean!
         specialization: String!
+        phoneNumber: String!
     }
 
     type ConfirmationAccount {
