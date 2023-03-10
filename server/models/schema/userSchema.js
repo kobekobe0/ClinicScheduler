@@ -68,6 +68,7 @@ const userSchema = new Schema({
     },
     referralCode: String,
     specialization: String,
+    phoneNumber: String,
 })
 
 export default userSchema
