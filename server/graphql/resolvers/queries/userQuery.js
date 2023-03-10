@@ -20,6 +20,7 @@ const findUser = async (parent, { email }, { token }) => {
             email: user?.email?.address,
             accountSetupProgress: user?.accountSetupProgress,
             type: user?.type,
+            specialization: user?.specialization || '',
         }
     } catch (error) {
         console.error('findUser: exception occurred', {
