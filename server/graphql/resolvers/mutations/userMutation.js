@@ -247,6 +247,17 @@ const createDoctorAccount = async (
             )
         }
 
+        if (auth.email != process.env.ADMIN_EMAIL) {
+            throw new GraphQLError(
+                'You are not authorized to perform this action. Admin level access.',
+                {
+                    extensions: {
+                        code: 'FORBIDDEN',
+                    },
+                }
+            )
+        }
+
         const user = await Users.findOne({ 'email.address': email })
         if (user === null) {
             let errs = []
