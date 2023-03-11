@@ -20,10 +20,19 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log(`User disconnected with ID ${socket.id}`)
     })
-
-    socket.on('message', (message) => {
-        console.log(`Received message: ${message}`)
-        io.emit('message')
+    /* data will look like:
+        {
+            message:
+            type: [to be arranged] - img will be based on here
+            from: --userId: (will be used to query the profile picture)--
+            read: boolean (to display number of new notification in the notification logo)
+            opened: boolean (to highlight wether the notification is opened or not)
+        }
+    */
+    socket.on('send-notification', (data, userId) => {
+        console.log(data)
+        //send the data notification to the user
+        socket.to(userId).emit('receive-notification', data)
     })
 })
 
