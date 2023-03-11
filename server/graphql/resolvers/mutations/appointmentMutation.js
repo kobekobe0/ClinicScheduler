@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 import bcrypt from 'bcryptjs'
 import { GraphQLError } from 'graphql'
+import socket from '../../../config/socket.js'
 
 import {
     idGeneratorHelper,
@@ -83,6 +84,29 @@ const createAppointment = async (
                     message: 'Something went wrong when creating appointment',
                 })
             }
+
+            const patientNotification = {
+                message: 'Successfully created your appointment!',
+                link: 'facebook.com', //dynamically create a link, FE must be completed first
+                type: 'APPOINTMENT_CREATED', //logo = check
+                from: 'ADMIN', //if no one's responsible for the notification, set it to org
+                read: false,
+                opened: false,
+            }
+
+            const doctorNotification = {
+                message: 'You have new notification!', // put message on constants.js
+                link: 'facebook.com', //dynamically create a link, FE must be completed first
+                type: 'NEW_APPOINTMENT', //logo = user pfp
+                from: patientId, //if no one's responsible for the notification, set it to org
+                read: false,
+                opened: false,
+            }
+            //save the two notification here first, then check if it is successful
+
+            //notification for patient
+            socket.emit('send-notification', patientNotification, patientId)
+            socket.emit('send-notification', doctorNotification, doctorId)
 
             return {
                 success: true,
