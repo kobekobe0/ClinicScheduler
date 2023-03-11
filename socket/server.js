@@ -23,6 +23,7 @@ io.on('connection', (socket) => {
     /* data will look like:
         {
             message:
+            link: link to new page that will show the appointment details
             type: [to be arranged] - img will be based on here
             from: --userId: (will be used to query the profile picture)--
             read: boolean (to display number of new notification in the notification logo)
