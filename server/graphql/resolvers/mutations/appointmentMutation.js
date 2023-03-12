@@ -12,6 +12,7 @@ import {
 import checkAuth from '../../../utils/checkAuth.js'
 import Appointments from '../../../models/Appointment.js'
 import Users from '../../../models/User.js'
+import Notifications from '../../../models/Notification.js'
 
 const createAppointment = async (
     parent,
@@ -103,6 +104,20 @@ const createAppointment = async (
                 opened: false,
             }
             //save the two notification here first, then check if it is successful
+
+            const patientNotif = await Notifications.create(patientNotification)
+            const doctorNotif = await Notifications.create(doctorNotification)
+
+            if (!patientNotif || !doctorNotif) {
+                throw new GraphQLError(
+                    `Failed to save notification in the database`,
+                    {
+                        extensions: {
+                            code: 'SCHEDULER_MUTATION_ERROR',
+                        },
+                    }
+                )
+            }
 
             //notification for patient
             socket.emit('send-notification', patientNotification, patientId)
