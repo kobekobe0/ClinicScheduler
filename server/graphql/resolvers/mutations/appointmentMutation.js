@@ -227,7 +227,19 @@ const updateAppointMent = async (
                 opened: false,
             }
             //save the two notification here first, then check if it is successful
+            const patientNotif = await Notifications.create(patientNotification)
+            const doctorNotif = await Notifications.create(doctorNotification)
 
+            if (!patientNotif || !doctorNotif) {
+                throw new GraphQLError(
+                    `Failed to update notification in the database`,
+                    {
+                        extensions: {
+                            code: 'SCHEDULER_MUTATION_ERROR',
+                        },
+                    }
+                )
+            }
             //notification for patient
             socket.emit('send-notification', patientNotification, patientId)
             socket.emit('send-notification', doctorNotification, doctorId)
