@@ -194,6 +194,29 @@ const updateAppointMent = async (
                 )
             }
 
+            const patientNotification = {
+                message: 'Your appointment has an update.',
+                link: 'facebook.com', //dynamically create a link, FE must be completed first
+                type: 'APPOINTMENT_UPDATED', //logo = check
+                from: updatedAppointment?.doctorId, //if no one's responsible for the notification, set it to org
+                read: false,
+                opened: false,
+            }
+
+            const doctorNotification = {
+                message: 'Your appointment has an update.', // put message on constants.js
+                link: 'facebook.com', //dynamically create a link, FE must be completed first
+                type: 'APPOINTMENT_UPDATED', //logo = user pfp
+                from: updatedAppointment?.patientId, //if no one's responsible for the notification, set it to org
+                read: false,
+                opened: false,
+            }
+            //save the two notification here first, then check if it is successful
+
+            //notification for patient
+            socket.emit('send-notification', patientNotification, patientId)
+            socket.emit('send-notification', doctorNotification, doctorId)
+
             return {
                 success: true,
                 message: 'successfully updated the appointment',
