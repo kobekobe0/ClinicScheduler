@@ -284,6 +284,29 @@ const cancelAppointment = async (parent, { appointmentId }, { token }) => {
                 throw new Error('failed to updated the appointment')
             }
 
+            const patientNotification = {
+                message: 'Your appointment is cancelled.',
+                link: 'facebook.com', //dynamically create a link, FE must be completed first
+                type: 'APPOINTMENT_CANCELLED', //logo = check
+                from: cancelAppointment?.doctorId, //if no one's responsible for the notification, set it to org
+                read: false,
+                opened: false,
+            }
+
+            const doctorNotification = {
+                message: 'An appointment has been cancelled.', // put message on constants.js
+                link: 'facebook.com', //dynamically create a link, FE must be completed first
+                type: 'APPOINTMENT_CANCELLED', //logo = user pfp
+                from: cancelAppointment?.patientId, //if no one's responsible for the notification, set it to org
+                read: false,
+                opened: false,
+            }
+            //save the two notification here first, then check if it is successful
+
+            //notification for patient
+            socket.emit('send-notification', patientNotification, patientId)
+            socket.emit('send-notification', doctorNotification, doctorId)
+
             return {
                 success: true,
                 message: 'Successfully canceled the appointment',
