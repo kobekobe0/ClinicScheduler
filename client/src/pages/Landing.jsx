@@ -182,6 +182,62 @@ function Landing() {
                     </div>
                 </div>
             </div>
+            {/*fourth*/}
+            <div className="h-screen w-full justify-center flex text-white bg-lighterDominant">
+                <div className="w-1/2 flex flex-col items-center">
+                    <div className="flex flex-col justify-center items-center mt-24">
+                        <h2 className="text-5xl">About</h2>
+                        <h3 className="text-xl font-normal text-lightGray mt-5">
+                            Who are we?
+                        </h3>
+                    </div>
+                    <div className="mt-10">
+                        <img
+                            src={about}
+                            alt=""
+                            style={{
+                                width: '200px',
+                                height: '200px',
+                                objectFit: 'cover',
+                                borderRadius: '50%',
+                            }}
+                            className="bg-dominant p-2"
+                        />
+                    </div>
+                    <div>
+                        <p className="text-lg font-normal mt-10">
+                            Our hospital scheduling website is a platform
+                            designed to make healthcare scheduling easier and
+                            more convenient for patients and healthcare
+                            providers. We understand the challenges that come
+                            with scheduling healthcare appointments, and our
+                            mission is to provide a simple, user-friendly
+                            solution to address these challenges.
+                            <br />
+                            <br />
+                            Our team is comprised of healthcare and technology
+                            experts who have extensive experience in developing
+                            innovative solutions to improve the healthcare
+                            industry. We are passionate about providing patients
+                            with access to high-quality healthcare services and
+                            empowering healthcare providers to manage their
+                            schedules more efficiently.
+                            <br />
+                            <br />
+                            Our platform is built with patient privacy and
+                            security in mind, and we adhere to the highest
+                            standards of data protection. We are committed to
+                            providing excellent customer service and support,
+                            and we are always looking for ways to improve our
+                            platform and services. Thank you for choosing our
+                            hospital scheduling website for your healthcare
+                            scheduling needs. We look forward to serving you and
+                            helping you manage your healthcare schedule with
+                            ease.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
