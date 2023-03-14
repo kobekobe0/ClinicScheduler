@@ -101,6 +101,87 @@ function Landing() {
                     </div>
                 </div>
             </div>
+            {/*third portion*/}
+            <div className="h-fit w-full bg-dominant justify-center flex text-white">
+                <div className="w-1/2 flex flex-col items-center">
+                    <div className="flex flex-col justify-center items-center mt-24">
+                        <h2 className="text-5xl">For professionals</h2>
+                        <h3 className="text-xl font-normal text-lightGray mt-5">
+                            We are currently looking for:
+                        </h3>
+                    </div>
+                    <div className="mt-10 bg-lighterDominant p-5 rounded-lg">
+                        <div className="flex align-center justify-center h-fit">
+                            <img
+                                src={consultant}
+                                alt="consultant"
+                                style={{ width: '200px', height: '200px' }}
+                            />
+                            <div className="justify-center flex flex-col">
+                                <h4 className="text-2xl">Junior consultants</h4>
+                                <p className="text-base font-normal">
+                                    A junior consultant is an entry-level
+                                    position in a consulting firm responsible
+                                    for assisting senior consultants with
+                                    research, analysis, and client
+                                    communication. They conduct research on
+                                    industry trends, competitors, and best
+                                    practices and present findings in reports.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-10 bg-lighterDominant p-5 rounded-lg text-end">
+                        <div className="flex align-center justify-center h-fit">
+                            <div className="justify-center flex flex-col mr-4">
+                                <h4 className="text-2xl">Surgeons</h4>
+                                <p className="text-base font-normal">
+                                    Surgeons perform surgeries to treat
+                                    injuries, diseases, and deformities. They
+                                    collaborate with other healthcare
+                                    professionals and undergo extensive training
+                                    to become licensed professionals in
+                                    hospitals and clinics.
+                                </p>
+                            </div>
+                            <img
+                                src={surgeon}
+                                alt="consultant"
+                                style={{ width: '200px', height: '200px' }}
+                            />
+                        </div>
+                    </div>
+                    <div className="mt-10 bg-lighterDominant p-5 rounded-lg">
+                        <div className="flex align-center justify-center h-fit">
+                            <img
+                                src={physician}
+                                alt="consultant"
+                                style={{ width: '200px', height: '200px' }}
+                            />
+                            <div className="justify-center flex flex-col">
+                                <h4 className="text-2xl">Physicians</h4>
+                                <p className="text-base font-normal">
+                                    Physicians are medical professionals who
+                                    diagnose and treat illnesses and injuries.
+                                    They work in a variety of settings,
+                                    including hospitals, clinics, and private
+                                    practices. Physicians may specialize in a
+                                    particular area of medicine, such as
+                                    cardiology or pediatrics.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex p-12 text-lightGray mb-10">
+                        <h3 className="text-lg font-medium">
+                            You may send your CVs here{' '}
+                        </h3>
+                        <i className="text-lg font-medium">
+                            : kobebrian.santos.e@gmail.com{' '}
+                        </i>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
