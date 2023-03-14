@@ -238,6 +238,14 @@ function Landing() {
                     </div>
                 </div>
             </div>
+            {/*footer*/}
+            <div className="h-fit w-full justify-center flex text-white bg-dominant">
+                <div className="p-24">
+                    <h5 className="text-lg font-semibold">
+                        All rights reserved © 2023
+                    </h5>
+                </div>
+            </div>
         </div>
     )
 }
